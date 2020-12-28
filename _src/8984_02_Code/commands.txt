@@ -1,0 +1,20 @@
+Commands
+
+
+#Setting the path variable
+
+nano ~/.bashrc
+export JAVA_HOME=[your java installation directory]
+
+#Listing all the AVDs
+
+android list avd
+
+#AVD Commands
+
+Listing all the connected devices : adb devices
+Listing all the installed packages: adb shell pm list packages
+Current Memory Consumption : adb shell dumpsys meminfo
+Storing logcat in a file : adb logcat -d -f /data/local/logcat.log
+File System : adb shell df
+

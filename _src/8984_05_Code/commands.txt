@@ -1,0 +1,81 @@
+#Seeing the partitions on the Android device
+
+adb shell
+cat /proc/mtd
+
+Another way : adb shell mount
+
+#Using dd to extract data
+
+dd if=[source file] bs=[block size] skip=[skip size] of=[destination file]
+
+#Pulling a file/image from device
+
+adb shell /mnt/sdcard/data.img data.img
+
+#Netcat while doing dd
+
+nc 127.0.0.1 5555 > data.img
+nc -l -p 5555 -e dd if=[input]
+
+#Reboot into bootloader mode
+
+adb reboot bootloader
+
+#Using dc3dd
+
+dc3dd if=[input file] of=[output file] [additional parameters - verb(on/off), hash(md5,sha256,etc), hlog, log ]
+
+#Using nanddump
+
+nanddump [options] /dev/mtd/mtd1 | nc -l -p 5566 (on the device)
+
+nc 127.0.0.1 5566 > data.img (on the system)
+
+#Using Andriller
+
+
+$ wget http://android.saz.lt/download/Andriller_multi.tar.gz
+$ tar -xvzf Andriller_multi.tar.gz
+$ python Andriller.py
+
+
+#Dumping Application Databases Manually
+
+Step1: 
+
+adb shell 
+mkdir /mnt/sdcard/BackupDBS
+
+Step2:
+
+find . -name “*.db” -type f
+find . -name “*.db” -type f -exec cp {} ./mnt/sdcard/BackupDBS \;
+
+Step3:
+
+tar cvf backups.tar BackupDBS/
+adb pull /mnt/sdcard/backups.tar backups.tar
+tar -xvf backups.tar
+
+#Logging the logcat
+
+
+adb logcat > logcat_dump.log
+adb logcat -v time -b radio -d
+adb shell getprop
+
+#Using backup to extract application's information
+
+Finding the package name :
+adb shell pm list package | grep 'lastpass'
+
+Using adb backup:
+
+adb backup [package name] -f [destination file name]
+dd if=backup.ab bs=24 skip=1 | openssl zlib -d > whatsapp.tar
+
+
+
+adb shell pm list package -f 'lastpass'
+

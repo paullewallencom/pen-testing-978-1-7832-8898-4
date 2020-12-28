@@ -1,0 +1,40 @@
+#Removing the lock
+
+Gesture Protection : adb shell rm /data/system/gesture.key
+Pin/Password Protection : adb shell rm /data/system/password.key
+
+
+#Storing image using base64 code snippet
+
+
+
+final File file = new File("/mnt/sdcard/profile.jpg");
+ContentResolver cr = getContentResolver();
+Bitmap bMap=null;
+try {
+InputStream is = cr.openInputStream(uri);
+bMap = BitmapFactory.decodeStream(is);
+if (is != null){
+ is.close();
+ }
+catch (Exception e) {
+Log.e("Error reading file", e.toString());
+ }
+ByteArrayOutputStream baos = new ByteArrayOutputStream();
+bMap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+byte[] b = baos.toByteArray();
+String imageString = Base64.encodeToString(b,Base64.DEFAULT);
+
+
+
+#Verifying the signature
+
+jarsigner -verify -certs -verbose testing.apk
+
+#Printing certificate info from android apk
+
+unzip testing.apk
+cd META-INF
+openssl pkcs7 -in CERT.RSA -print_certs -inform DER -out out.cer
+cat out.cer
+

